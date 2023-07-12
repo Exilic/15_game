@@ -7,9 +7,13 @@ function startNewGame() {
     for (let index = 0; index < 16; index++) {
         gameNumbers[index] = (index+1);
     }
-    newRandomOrder();
+
+    do {
+        newRandomOrder();
+        determineSixteen();
+    } while (isSolvable() === false)
+
     rearrangeCSS();
-    determineSixteen();
     document.getElementById('result').innerHTML = "The present game is unsolved";
 }
 
@@ -35,6 +39,19 @@ function determineSixteen() {
     }
 }
 
+function isSolvable() {
+    const isEven = Math.floor((numberSixteen) / 4 ) % 2 === 0;
+    let count = 0;
+    for (let i = 0; i < 15; i++) {
+        if(gameNumbers[i] !== 16) {
+            for ( let j = i; j < 16; j++) {
+                if(gameNumbers[i] > gameNumbers[j]) count++;
+            }
+        }
+    }
+    if(isEven &&  Math.abs(count % 2) === 1) return true;
+    return !isEven && count % 2 === 0;
+}
 
 function swipeLeft() {
     if (((numberSixteen+1) % 4) != 0){
